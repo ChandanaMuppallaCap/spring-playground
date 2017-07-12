@@ -1,5 +1,6 @@
 package demoapp.demo;
 
+import static org.springframework.test.web.client.match.MockRestRequestMatchers.queryParam;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
@@ -32,12 +33,12 @@ public class PIControllerTests {
 		.andExpect(status().isOk())
 		.andExpect(content().string("3.12343"));
 	}
-	  @Test
-	    public void testaddEndpoint() throws Exception {
-	        this.mvc.perform(get("/math/calculate?operation={op}&x={op1}&y={op2}", "add",1,2)).
-	                andExpect(status().isOk())
-	                .andExpect(content().string("3"));
-	    }
+	@Test
+	public void testaddEndpoint() throws Exception {
+		this.mvc.perform(get("/math/calculate?operation={op}&x={op1}&y={op2}", "add",1,2)).
+		andExpect(status().isOk())
+		.andExpect(content().string("3"));
+	}
 
 	@Test
 	public void testsubtractEndpoint() throws Exception {
@@ -67,64 +68,119 @@ public class PIControllerTests {
 		.andExpect(content().string("3"));
 	}
 	@Test
-	 public void testSumEndpoint() throws Exception {
-		    this.mvc.
-			perform(post("/math/sum?n={var1}&n={var2}&n={var3}", 2, 4, 2)).andExpect(status().isOk())
-	                .andExpect(content().string("8"));}	
+	public void testSumEndpoint() throws Exception {
+		this.mvc.
+		perform(post("/math/sum?n={var1}&n={var2}&n={var3}", 2, 4, 2)).andExpect(status().isOk())
+		.andExpect(content().string("8"));}	
 
 	@Test
 
-	 public void testPostVolumeEndpoint() throws Exception {
-		    this.mvc.
-			perform(post("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
-	                .andExpect(content().string("16"));}	
+	public void testPostVolumeEndpoint() throws Exception {
+		this.mvc.
+		perform(post("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
+		.andExpect(content().string("16"));}	
 	@Test	 
-	 public void testGetVolumeEndpoint() throws Exception {
-		    this.mvc.
-			perform(get("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
-	                .andExpect(content().string("16"));}	
+	public void testGetVolumeEndpoint() throws Exception {
+		this.mvc.
+		perform(get("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
+		.andExpect(content().string("16"));}	
 
 	@Test
-	 public void testPatchVolumeEndpoint() throws Exception {
-		    this.mvc.
-			perform(patch("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
-	                .andExpect(content().string("16"));}	
+	public void testPatchVolumeEndpoint() throws Exception {
+		this.mvc.
+		perform(patch("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
+		.andExpect(content().string("16"));}	
 
 	@Test
-	 public void testAreaEndpoint() throws Exception {
-		 
-		 
-		 MockHttpServletRequestBuilder request = post("/math/area")
-	                
-	                .param("type", "circle")
-	                .param("radius", "3");
-		 
-		 System.out.println("In Area test");
-		    this.mvc.
-			perform(request).andExpect(status().isOk())
-	                .andExpect(content().string("Area of circlewith radius 3.0is 28.259999999999998"));
-		    
-	 }	
-	
+	public void testAreaEndpoint() throws Exception {
+
+
+		MockHttpServletRequestBuilder request = post("/math/area")
+
+				.param("type", "circle")
+				.param("radius", "3");
+
+		System.out.println("In Area test");
+
+
+		this.mvc.
+		perform(request).andExpect(status().isOk())
+		.andExpect(content().string("Area of circlewith radius 3.0is 28.259999999999998"));
+
+	}	
+
 	@Test
-	 public void testAreaRectangleEndpoint() throws Exception {
-		 
-		 
-		 MockHttpServletRequestBuilder request = post("/math/area")
-	                
-	                .param("type", "rectangle")
-	                .param("length", "3")
-	                .param("width", "3");
-		 
-		 
-		 System.out.println("In Area test");
-		    this.mvc.
-			perform(request).andExpect(status().isOk())
-	                .andExpect(content().string("Area of rectangle with width 3.0 and length 3.0is 9.0"));
-		    
-	 }	
+	public void testAreaRectangleEndpoint() throws Exception {
 
 
-	
+		MockHttpServletRequestBuilder request = post("/math/area")
+
+				.param("type", "rectangle")
+				.param("length", "3")
+				.param("width", "3");
+
+
+		System.out.println("In Area test");
+		this.mvc.
+		perform(request).andExpect(status().isOk())
+		.andExpect(content().string("Area of rectangle with width 3.0 and length 3.0is 9.0"));
+
+	}	
+
+	@Test
+	public void testErrorpoint() throws Exception {
+
+
+		MockHttpServletRequestBuilder request = post("/math/area")
+
+				.param("type", "circle")
+				.param("width", "3");
+
+
+		System.out.println("In Area test");
+
+
+		this.mvc.
+		perform(request).andExpect(status().isOk())
+		.andExpect(content().string("Invalid"));
+
+	}	
+	@Test
+	public void testErrorpoint2() throws Exception {
+
+
+		MockHttpServletRequestBuilder request = post("/math/area")
+
+				.param("type", "circle")
+				.param("length", "3");
+
+
+		System.out.println("In Area test");
+
+
+		this.mvc.
+		perform(request).andExpect(status().isOk())
+		.andExpect(content().string("Invalid"));
+
+	}	
+
+	@Test
+	public void testErrorpoint3() throws Exception {
+
+
+		MockHttpServletRequestBuilder request = post("/math/area")
+
+				.param("type", "rectangle")
+				.param("radius", "3");
+
+
+		System.out.println("In Area test");
+
+
+		this.mvc.
+		perform(request).andExpect(status().isOk())
+		.andExpect(content().string("Invalid"));
+
+	}	
 
 }
