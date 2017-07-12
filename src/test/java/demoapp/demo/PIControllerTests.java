@@ -15,6 +15,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
@@ -65,29 +66,64 @@ public class PIControllerTests {
 		andExpect(status().isOk())
 		.andExpect(content().string("3"));
 	}
-	
+	@Test
 	 public void testSumEndpoint() throws Exception {
 		    this.mvc.
 			perform(post("/math/sum?n={var1}&n={var2}&n={var3}", 2, 4, 2)).andExpect(status().isOk())
 	                .andExpect(content().string("8"));}	
 
-	
+	@Test
 
 	 public void testPostVolumeEndpoint() throws Exception {
 		    this.mvc.
 			perform(post("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
 	                .andExpect(content().string("16"));}	
-	 
+	@Test	 
 	 public void testGetVolumeEndpoint() throws Exception {
 		    this.mvc.
 			perform(get("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
 	                .andExpect(content().string("16"));}	
 
-	
+	@Test
 	 public void testPatchVolumeEndpoint() throws Exception {
 		    this.mvc.
 			perform(patch("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
 	                .andExpect(content().string("16"));}	
+
+	@Test
+	 public void testAreaEndpoint() throws Exception {
+		 
+		 
+		 MockHttpServletRequestBuilder request = post("/math/area")
+	                
+	                .param("type", "circle")
+	                .param("radius", "3");
+		 
+		 System.out.println("In Area test");
+		    this.mvc.
+			perform(request).andExpect(status().isOk())
+	                .andExpect(content().string("Area of circlewith radius 3.0is 28.259999999999998"));
+		    
+	 }	
+	
+	@Test
+	 public void testAreaRectangleEndpoint() throws Exception {
+		 
+		 
+		 MockHttpServletRequestBuilder request = post("/math/area")
+	                
+	                .param("type", "rectangle")
+	                .param("length", "3")
+	                .param("width", "3");
+		 
+		 
+		 System.out.println("In Area test");
+		    this.mvc.
+			perform(request).andExpect(status().isOk())
+	                .andExpect(content().string("Area of rectangle with width 3.0 and length 3.0is 9.0"));
+		    
+	 }	
+
 
 	
 

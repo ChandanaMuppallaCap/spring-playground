@@ -2,6 +2,8 @@ package demoapp.demo;
 
 
 
+import java.util.Map;
+
 import org.springframework.beans.factory.annotation.Autowired;
 
 import org.springframework.web.bind.annotation.GetMapping;
@@ -43,7 +45,46 @@ public class PIController {
 		return length*width*height;
 
 	}
-	
-	
+
+	@PostMapping("/math/area")
+	public String Area(@RequestParam Map<String, String> params){
+		String type=params.get("type");
+
+
+		double area=0.0;
+		String result="";
+
+		if(type.equalsIgnoreCase("circle"))
+		{
+			if(params.containsKey("width")|| params.containsKey("length"))
+			{
+				result ="Invalid";
+			}
+			else{
+				Double radius=Double.parseDouble(params.get("radius"));
+				area=3.14*radius*radius;
+				result="Area of "+type  +"with radius "+ radius +"is "+ area;
+			}
+		}
+
+		else if (type.equalsIgnoreCase("rectangle"))
+		{
+
+			if(params.containsKey("radius"))
+			{
+				result="Invalid";
+			}
+			else{
+				Double width=Double.parseDouble(params.get("width"));
+				Double length=Double.parseDouble(params.get("length"));
+				area=length*width;
+				result="Area of "+type  +" with width "+width +" and length " + length +"is "+ area;
+			}
+		}
+
+		return result;
+	}
+
+
 }
 
