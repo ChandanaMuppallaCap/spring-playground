@@ -1,6 +1,7 @@
 package demoapp.demo;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
@@ -67,11 +68,27 @@ public class PIControllerTests {
 	
 	 public void testSumEndpoint() throws Exception {
 		    this.mvc.
-			perform(post("/math/sum?n={var1}&n={var2}&n={var3}", 2.0, 4.0, 2.0)).andExpect(status().isOk())
+			perform(post("/math/sum?n={var1}&n={var2}&n={var3}", 2, 4, 2)).andExpect(status().isOk())
 	                .andExpect(content().string("8"));}	
 
 	
 
+	 public void testPostVolumeEndpoint() throws Exception {
+		    this.mvc.
+			perform(post("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
+	                .andExpect(content().string("16"));}	
+	 
+	 public void testGetVolumeEndpoint() throws Exception {
+		    this.mvc.
+			perform(get("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
+	                .andExpect(content().string("16"));}	
 
+	
+	 public void testPatchVolumeEndpoint() throws Exception {
+		    this.mvc.
+			perform(patch("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
+	                .andExpect(content().string("16"));}	
+
+	
 
 }
