@@ -2,6 +2,11 @@ package demoapp.demo;
 
 
 
+import java.text.DateFormat;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
+import java.util.Date;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,12 +18,32 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.context.request.WebRequest;
+
+import com.fasterxml.jackson.annotation.JsonProperty;
+
+import demoapp.demo.passenger;
 @RestController
 
 public class PIController {
 	@Autowired
 	private MathService mathservice;
 
+
+	@Autowired
+	private Flight flighter;
+	@Autowired
+	private Flight flighterAnother;
+	@Autowired
+	private tickets tic;
+	@Autowired
+	private tickets ticAnother;
+
+
+
+	@Autowired
+	private passenger p;
+	@Autowired
+	private passenger pAnother;
 	@GetMapping("/math/pi")
 	public String getPi()
 	{
@@ -39,10 +64,10 @@ public class PIController {
 
 	@RequestMapping("/math/volume/{length}/{width}/{height}")
 
-	public int volume (@PathVariable("length") int length, @PathVariable("width") int width, @PathVariable("height") int height)
+	public String volume (@PathVariable("length") int length, @PathVariable("width") int width, @PathVariable("height") int height)
 	{
-
-		return length*width*height;
+		String result="The volume is"+(length*width*height);
+		return result;
 
 	}
 
@@ -85,6 +110,96 @@ public class PIController {
 		return result;
 	}
 
+	// 4 th Unit JSOn Rendering
+	@GetMapping("/flights/flight")
+	public Flight renderJson()
+	{
+		p.setFirstName("chandana");
+		p.setLastName("muppalla");
+
+
+		tic.setPass(p);
+		tic.setPrice(200);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		Date date;
+		try {
+			date = (Date)((DateFormat) formatter).parse("2017-04-21 14:31");
+
+			String s = formatter.format(date);
+			flighter.setDeparts(formatter.format(date) );
+			formatter.format(date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		ArrayList<tickets> tick= new ArrayList<tickets>();
+		tick.add(tic);
+
+		flighter.setTic(tick);
+		return flighter;
+	}
+
+
+	@GetMapping("/flights")
+	public ArrayList<Flight> renderJsonArray()
+	{
+	
+		ArrayList<Flight> flights=new ArrayList<Flight>();
+		p.setFirstName("Some  name");
+		p.setLastName("Some  other name");
+
+
+		tic.setPass(p);
+		tic.setPrice(200);
+		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
+		Date date;
+		try {
+			date = (Date)((DateFormat) formatter).parse("2017-04-21 14:31");
+
+			
+			flighter.setDeparts(formatter.format(date) );
+			formatter.format(date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+
+		ArrayList<tickets> tick= new ArrayList<tickets>();
+		tick.add(tic);
+
+		flighter.setTic(tick);
+		
+		flights.add(flighter);
+		
+		
+		
+		pAnother.setFirstName("Some other name");
+		ticAnother.setPass(pAnother);
+		ticAnother.setPrice(400);
+	
+		
+		try {
+			date = (Date)((DateFormat) formatter).parse("2017-04-21 14:31");
+
+		
+			flighterAnother.setDeparts(formatter.format(date) );
+			formatter.format(date);
+		} catch (ParseException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
+		ArrayList<tickets> ti= new ArrayList<tickets>();
+		
+		ti.add(ticAnother);
+
+		flighterAnother.setTic(tick);
+		flights.add(flighterAnother);
+		return flights;
+	}
 
 }
 

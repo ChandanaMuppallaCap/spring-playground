@@ -78,18 +78,18 @@ public class PIControllerTests {
 	public void testPostVolumeEndpoint() throws Exception {
 		this.mvc.
 		perform(post("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
-		.andExpect(content().string("16"));}	
+		.andExpect(content().string("The volume is16"));}	
 	@Test	 
 	public void testGetVolumeEndpoint() throws Exception {
 		this.mvc.
 		perform(get("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
-		.andExpect(content().string("16"));}	
+		.andExpect(content().string("The volume is16"));}	
 
 	@Test
 	public void testPatchVolumeEndpoint() throws Exception {
 		this.mvc.
 		perform(patch("/math/volume/{var1}/{var2}/{var3}", 2, 4, 2)).andExpect(status().isOk())
-		.andExpect(content().string("16"));}	
+		.andExpect(content().string("The volume is16"));}	
 
 	@Test
 	public void testAreaEndpoint() throws Exception {
