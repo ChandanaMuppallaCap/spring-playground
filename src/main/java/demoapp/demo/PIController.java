@@ -9,8 +9,10 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import javax.annotation.Resource;
 
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,14 +30,17 @@ public class PIController {
 	@Autowired
 	private MathService mathservice;
 
-
 	@Autowired
+
 	private Flight flighter;
 	@Autowired
+
 	private Flight flighterAnother;
 	@Autowired
+
 	private tickets tic;
 	@Autowired
+
 	private tickets ticAnother;
 
 
@@ -114,6 +119,8 @@ public class PIController {
 	@GetMapping("/flights/flight")
 	public Flight renderJson()
 	{
+
+
 		p.setFirstName("chandana");
 		p.setLastName("muppalla");
 
@@ -145,12 +152,14 @@ public class PIController {
 	@GetMapping("/flights")
 	public ArrayList<Flight> renderJsonArray()
 	{
-	
+		passenger p=new passenger();
+		passenger pAnother=new passenger();
+		Flight flighter=new Flight();
+		Flight flighterAnother=new Flight();
+		tickets  ticAnother=new tickets();
 		ArrayList<Flight> flights=new ArrayList<Flight>();
 		p.setFirstName("Some  name");
 		p.setLastName("Some  other name");
-
-
 		tic.setPass(p);
 		tic.setPrice(200);
 		SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd hh:mm");
@@ -158,7 +167,7 @@ public class PIController {
 		try {
 			date = (Date)((DateFormat) formatter).parse("2017-04-21 14:31");
 
-			
+
 			flighter.setDeparts(formatter.format(date) );
 			formatter.format(date);
 		} catch (ParseException e) {
@@ -169,22 +178,17 @@ public class PIController {
 
 		ArrayList<tickets> tick= new ArrayList<tickets>();
 		tick.add(tic);
-
 		flighter.setTic(tick);
-		
-		flights.add(flighter);
-		
-		
-		
+		flights.add(0,flighter);
 		pAnother.setFirstName("Some other name");
 		ticAnother.setPass(pAnother);
 		ticAnother.setPrice(400);
-	
-		
+
+
 		try {
 			date = (Date)((DateFormat) formatter).parse("2017-04-21 14:31");
 
-		
+
 			flighterAnother.setDeparts(formatter.format(date) );
 			formatter.format(date);
 		} catch (ParseException e) {
@@ -193,11 +197,11 @@ public class PIController {
 		}
 
 		ArrayList<tickets> ti= new ArrayList<tickets>();
-		
+
 		ti.add(ticAnother);
 
-		flighterAnother.setTic(tick);
-		flights.add(flighterAnother);
+		flighterAnother.setTic(ti);
+		flights.add(1,flighterAnother);
 		return flights;
 	}
 
