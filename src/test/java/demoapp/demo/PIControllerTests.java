@@ -9,7 +9,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.io.File;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -191,62 +196,90 @@ public class PIControllerTests {
 
 	@Test
 	public void testJsonString() throws Exception {
-		 this.mvc.perform(
+		this.mvc.perform(
 				post("/flights/tickets/total")
 				.accept(MediaType.APPLICATION_JSON)
 				.contentType(MediaType.APPLICATION_JSON_VALUE)
-		        .content("{tickets: [{{firstName: Chandana,lastName: M}, price:300},{{firstName: Chandra,lastName: G},price:50}]}"))
-		
-		
+				.content("{\"tickets\": [{\"passenger\": {\"firstName\": \"Chandana\", \"lastName\":\"M\"}, \"price\": 300},{\"passenger\": {\"firstName\": \"Chandra\", \"lastName\":\"G\"}, \"price\": 150}]}"))
+
+
 		.andExpect(status().isOk());
-		
 
 
+
+
+	}
+
+	@Test
+	public void testObject() throws Exception {
+
+
+		tickets t=new tickets();
+		tickets t1=new tickets();
+		ArrayList<tickets> tic=new ArrayList();
+		passenger p=new passenger();
+		p.setFirstName("chandana");
+		p.setLastName("muppalla");
+		passenger p2=new passenger();
+		p2.setFirstName("angelica");
+		p2.setLastName("schuyler");
+		t.setPass(p);
+		t1.setPass(p2);
+		t1.setPrice(50);
+		t.setPrice(300);
+		tic.add(t);
+		tic.add(t1);
+
+
+
+
+
+		RequestObject r=new RequestObject();
+
+		r.setTickets(tic);
+
+
+
+
+
+
+
+		ObjectMapper json=new ObjectMapper();
+		String json1 = json.writeValueAsString(r); 
+
+		System.out.println("VALUE"+json1);
+
+		MockHttpServletRequestBuilder request = post("/flights/tickets/total")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json1);                                         // 4
+
+		this.mvc.perform(request).andExpect(status().isOk());
+
+	}
+
+	@Test
+	public void testingBody() throws Exception {
+		String json = getJSON("src/test/resources/data.json");
+		System.out.println(json);
+		MockHttpServletRequestBuilder request = post("/flights/tickets/total")
+				.contentType(MediaType.APPLICATION_JSON)
+				.content(json);
+
+		this.mvc.perform(request)
+		.andExpect(status().isOk())
+		.andExpect(content().string("350"));
 		
 	}
 
-	 @Test
-	    public void testObject() throws Exception {
-	    
-	    
-	     tickets t=new tickets();
-	     tickets t1=new tickets();
-	     ArrayList<tickets> tic=new ArrayList();
-	     passenger p=new passenger();
-	     p.setFirstName("chandana");
-	     p.setLastName("muppalla");
-	     passenger p2=new passenger();
-	     p2.setFirstName("angelica");
-	     p2.setLastName("schuyler");
-	     t.setPass(p);
-	     t1.setPass(p2);
-	     t1.setPrice(50);
-	     t.setPrice(300);
-	     tic.add(t);
-	     tic.add(t1);
-
-	    
-
-  ObjectMapper json=new ObjectMapper();
-  String json1 = json.writeValueAsString(tic); 
-
-  MockHttpServletRequestBuilder request = post("/flights/tickets/total")
-          .contentType(MediaType.APPLICATION_JSON)
-          .content(json1);                                         // 4
-
-  this.mvc.perform(request).andExpect(status().isOk());
-	                       
-	    }
-/*
-	    @Test
-	    public void testArray() throws Exception {
-	        this.mvc.perform(
-	                get("/json/array")
-	                        .accept(MediaType.APPLICATION_JSON_UTF8)
-	                        .contentType(MediaType.APPLICATION_JSON_UTF8))
-	                .andExpect(status().isOk())
-	                .andExpect(jsonPath("$[0].firstName", is("Dwayne")))
-	                .andExpect(jsonPath("$[0].lastName", is("Johnson")));
-	    }*/
+	private String getJSON(String path) throws Exception {
+		ClassLoader classLoader = getClass().getClassLoader();
+	System.out.println("PATH"+path);
+		//File file = new File(classLoader.getResource(path).getFile());
+		/*System.out.println("Path"+path);
+		URL url = this.getClass().getResource(path);
+		System.out.println("URL"+url);
+		
+*/		return new String(Files.readAllBytes(Paths.get(path)));
+	}
 
 }

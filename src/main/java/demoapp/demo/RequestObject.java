@@ -9,7 +9,9 @@ public List<tickets> getTickets() {
 	return tickets;
 }
 
-public void setP(List<tickets> tickets) {
+public void setTickets(List<tickets> tickets) {
 	this.tickets = tickets;
 }
+
+
 }
