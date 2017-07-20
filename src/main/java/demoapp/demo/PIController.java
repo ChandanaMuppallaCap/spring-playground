@@ -7,6 +7,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -16,6 +17,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -27,6 +29,18 @@ import demoapp.demo.passenger;
 @RestController
 
 public class PIController {
+	
+	private  int result;
+	
+	public int getResult() {
+		return result;
+	}
+
+	public void setResult(int result) {
+		this.result = result;
+	}
+
+
 	@Autowired
 	private MathService mathservice;
 
@@ -205,5 +219,19 @@ public class PIController {
 		return flights;
 	}
 
+
+	@PostMapping("/flights/tickets/total")
+	public int Render(@RequestBody RequestObject  flights)
+	{ 
+		int sum=0;
+		for(int i=0;i<flights.getTickets().size();i++)
+		{
+			sum=sum+flights.getTickets().get(i).getPrice();
+			
+		}
+		System.out.println("HEYYYYYY "+flights.toString());
+		result=sum;
+		return result;
+	}
 }
 

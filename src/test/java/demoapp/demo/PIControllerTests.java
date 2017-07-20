@@ -1,11 +1,15 @@
 package demoapp.demo;
 
+import static org.hamcrest.CoreMatchers.is;
 import static org.springframework.test.web.client.match.MockRestRequestMatchers.queryParam;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.patch;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
+
+import java.util.ArrayList;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -19,6 +23,8 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
+
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 @RunWith(SpringRunner.class)
 @WebMvcTest(PIController.class)
@@ -182,5 +188,65 @@ public class PIControllerTests {
 		.andExpect(content().string("Invalid"));
 
 	}	
+
+	@Test
+	public void testJsonString() throws Exception {
+		 this.mvc.perform(
+				post("/flights/tickets/total")
+				.accept(MediaType.APPLICATION_JSON)
+				.contentType(MediaType.APPLICATION_JSON_VALUE)
+		        .content("{tickets: [{{firstName: Chandana,lastName: M}, price:300},{{firstName: Chandra,lastName: G},price:50}]}"))
+		
+		
+		.andExpect(status().isOk());
+		
+
+
+		
+	}
+
+	 @Test
+	    public void testObject() throws Exception {
+	    
+	    
+	     tickets t=new tickets();
+	     tickets t1=new tickets();
+	     ArrayList<tickets> tic=new ArrayList();
+	     passenger p=new passenger();
+	     p.setFirstName("chandana");
+	     p.setLastName("muppalla");
+	     passenger p2=new passenger();
+	     p2.setFirstName("angelica");
+	     p2.setLastName("schuyler");
+	     t.setPass(p);
+	     t1.setPass(p2);
+	     t1.setPrice(50);
+	     t.setPrice(300);
+	     tic.add(t);
+	     tic.add(t1);
+
+	    
+
+  ObjectMapper json=new ObjectMapper();
+  String json1 = json.writeValueAsString(tic); 
+
+  MockHttpServletRequestBuilder request = post("/flights/tickets/total")
+          .contentType(MediaType.APPLICATION_JSON)
+          .content(json1);                                         // 4
+
+  this.mvc.perform(request).andExpect(status().isOk());
+	                       
+	    }
+/*
+	    @Test
+	    public void testArray() throws Exception {
+	        this.mvc.perform(
+	                get("/json/array")
+	                        .accept(MediaType.APPLICATION_JSON_UTF8)
+	                        .contentType(MediaType.APPLICATION_JSON_UTF8))
+	                .andExpect(status().isOk())
+	                .andExpect(jsonPath("$[0].firstName", is("Dwayne")))
+	                .andExpect(jsonPath("$[0].lastName", is("Johnson")));
+	    }*/
 
 }
